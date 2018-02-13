@@ -12,6 +12,11 @@ Slack で簡単に投票等を行える BOT です．
 /poll "ここにタイトルを入れます"
 ```
 
+もしくは，次のように打つと，後述の `Multiple Choice` が選ばれ，その選択肢が自動的に生成されます．
+```
+/poll "タイトル" "選択肢1" "選択肢2" "選択肢3"
+```
+
 ### 設定
 #### Poll Types
 5種類の投票方式が用意されています．
@@ -25,6 +30,7 @@ Slack で簡単に投票等を行える BOT です．
 - `Multiple Choice` : 複数選択肢から1つを選択する．
   - `+ Add Options` で選択肢を設定します．
 
+
 - `Open Ended` : 自由記述式．
 
 投票のタイミングを設定します．
@@ -37,9 +43,9 @@ Slack で簡単に投票等を行える BOT です．
  
 #### Submit
 
-- `Submit to Channel` : 現在のチャンネルへ投票を投稿します．
+- `Submit to Channel` : 現在のチャンネルへ投票を投稿する．
 
-- `Submit to DM` : DM へ投票を投稿します．
+- `Submit to DM` : DM へ投票を投稿する．
 
 ### Options
 
