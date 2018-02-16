@@ -5,6 +5,9 @@
 ### [Blog](http://23prime.hatenablog.com/)
 ### [Instagram](https://www.instagram.com/23_prime/)
 
-## Memos
+## Notes
 ### [Polly](./polly/)
-Slack Bot for Vote.
+Slack Bot for Voting.
+
+### [Rust](./rust/)
+Rust compared with Haskell.
