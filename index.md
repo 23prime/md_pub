@@ -11,3 +11,6 @@ Slack Bot for Voting.
 
 ### [Rust](./rust/)
 Rust compared with Haskell.
+
+### [LaTeX](./latex/)
+About tools of LaTeX.
