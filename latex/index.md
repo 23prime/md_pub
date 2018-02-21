@@ -190,3 +190,13 @@ else
     esac
 fi
 ```
+
+一応 Emacs から使えるようにしておきます．
+
+`init.el`
+```lisp
+(defun texrm ()
+  (interactive)
+  (shell-command-to-string "texrm -y"))
+(define-key global-map (kbd "C-c d") 'texrm)
+```
