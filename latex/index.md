@@ -31,21 +31,26 @@ latexmk [<options>] hoge.tex
 `~./latexmkrc`
 ```perl
 #!/usr/bin/env perl
-$latex                       = 'platex -synctex=1 -halt-on-error';
-$latex_silent                = 'platex -synctex=1 -halt-on-error -interaction=batchmode';
-$bibtex                      = 'pbibtex';
-$dvipdf                      = 'dvipdfmx %O -o %D %S';
-$makeindex                   = 'mendex %O -o %D %S';
-$max_repeat                  = 5;
-$pdf_mode                    = 3;
+$latex         = 'uplatex -synctex=1 -halt-on-error';
+$latex_silent  = 'uplatex -synctex=1 -halt-on-error -interaction=batchmode';
+$bibtex        = 'upbibtex';
+$dvipdf        = 'dvipdfmx %O -o %D %S';
+$makeindex     = 'mendex %O -o %D %S';
+$max_repeat    = 5;
+$pdf_mode      = 3;
+$pdf_previewer = "evince";
 $pvc_view_file_via_temporary = 0;
-$pdf_previewer               = "evince";
 ```
 
 基本的には使うコマンドを指定するだけなので，好きなものを書きます．
 
-`-halt-on-error` `-interaction=batchmode`により，途中のエラーを無視したり，`-synctex=1` で後述の [SyncTeX](#sync) を有効にしたりしてます．
+なお，  `uplatex` は，`platex` の Unicode 化です．
+```tex
+\documentclass[uplatex]{jsarticle}
+```
+とか書くと使えます．[こちら](https://qiita.com/zr_tex8r/items/5c14042078b20edbfb07) が参考になります．
 
+また， `-halt-on-error` `-interaction=batchmode` により，途中のエラーを無視したり，`-synctex=1` で後述の [SyncTeX](#sync) を有効にしたりしてます．
 
 ## <a name="yr"> YaTeX + RefTeX </a>
 
