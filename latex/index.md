@@ -47,7 +47,7 @@ $pdf_previewer               = "evince";
 `-halt-on-error` `-interaction=batchmode`により，途中のエラーを無視したり，`-synctex=1` で後述の [SyncTeX](#sync) を有効にしたりしてます．
 
 
-## <a name "yr"> YaTeX + RefTeX </a>
+## <a name="yr"> YaTeX + RefTeX </a>
 
 LaTeX 執筆に不可欠な Emacs のモードです．
 
@@ -84,7 +84,7 @@ LaTeX 執筆に不可欠な Emacs のモードです．
 - `C-c C-b SPC` : `\begin{hoge}` `\end{hoge}` を作ってくれる
 
 
-## <a name="yr"> TeXrm </a>
+## <a name="rm"> TeXrm </a>
 
 LaTeX の中間ファイルたちをまとめて片付けるために書いたスクリプトです．
 
