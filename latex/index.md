@@ -84,7 +84,7 @@ LaTeX 執筆に不可欠な Emacs のモードです．
 - `C-c C-b SPC` : `\begin{hoge}` `\end{hoge}` を作ってくれる
 
 
-## <a name "yr"> TeXrm </a>
+## <a name="yr"> TeXrm </a>
 
 LaTeX の中間ファイルたちをまとめて片付けるために書いたスクリプトです．
 
