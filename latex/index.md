@@ -70,7 +70,7 @@ LaTeX 執筆に不可欠な Emacs のモードです．
 
 LaTeX の中間ファイルたちをまとめて片付けるために書いたスクリプトです．
 
-`latexmk -c` の方がちゃんとした人が作ってるのでいいかも．
+ちゃんと誰かが作ってる `latexmk -c` の方がいいかも．
 
 `texrm`
 ```shell
@@ -95,24 +95,29 @@ targets=(
     *.gz
 )
 
-# 対象ファイルの探索して配列化
-files=()
-for i in ${targets[@]}; do
-    files+=(`find -maxdepth 1 -name "${i}"`)
-done
+# help で呼び出すやつ
+function usage {
+    cat <<EOF
+Usage:
+    texrm [<options>]
 
-# 実行部
-if [ "${#files[@]}" -eq 0 ]; then # ファイルの有無を確認
-    echo "No such files."
-    exit 1
-elif [ $# -eq 0 ]; then  # 確認してから実行
+Options:
+    -y, --yes    : Not ask whether to remove.
+    -e, --except : Exclude some files by extension.
+    -v, --version: TeXrm version.
+    -h, --help   : Help for TeXrm.
+EOF
+}
+
+# 削除を確認してから消す関数
+function askremove {
     for j in ${files[@]}; do # 対象ファイルの表示
         echo "${j}"
     done
     echo "Remove these files? [Y/n]" # 削除実行の確認
     read ANS
     case $ANS in
-        "" | "Y" | "y" | "yes" | "Yes" | "YES" )
+        "" | Y | y | yes | Yes | YES )
             for i in ${files[@]}; do
                 rm -rf "${i}"
             done
@@ -121,27 +126,62 @@ elif [ $# -eq 0 ]; then  # 確認してから実行
             echo "Canceled." ;;
     esac
     exit 0
-elif [ $# -eq 1 -a $ARG = "-y" ]; then # 確認無しで実行
-    for j in ${files[@]}; do
-        echo "${j}"
-    done
-    for i in ${files[@]}; do
-        rm -rf "${i}"
-    done
-    echo "These files have been Removed!"
+}
+
+# 対象ファイルを探して配列化
+files=()
+for i in ${targets[@]}; do
+    files+=(`find -maxdepth 1 -name "${i}"`) # カレントディレクトリ直下のファイルのみ対象
+done
+
+org_ifs=$IFS # デリミタを一時的に定義しなおす
+IFS=$'\n'
+files=($(echo "${files[*]}" | sort -n)) # 配列を辞書順ソート
+IFS=$org_ifs
+
+# 実行部
+if [ "${#files[@]}" -eq 0 ]; then # ファイルの有無を確認
+    echo "No such files."
     exit 0
 else
-    echo "Error: Invalid arguments." 1>&2
-    exit 1
+    case $ARG in
+        "" )
+            askremove 
+            exit 0 ;;
+        -Y | -y | -yes | -Yes | -YES ) # 削除の確認をしないやつ
+            for j in ${files[@]}; do
+                echo "${j}"
+            done
+            for i in ${files[@]}; do
+                rm -rf "${i}"
+            done
+            echo "These files have been Removed!"
+            exit 0 ;;
+        -e | --except ) # 削除しない拡張子を指定できる
+            echo "Please enter the extension to exclude."
+            read EXT
+            files=()
+            for i in ${targets[@]}; do
+                if [ $i != *.$EXT ]; then
+                    files+=(`find -maxdepth 1 -name "${i}"`)
+                else
+                    :
+                fi
+            done
+            askremove
+            exit 0 ;;
+        -h | --help )
+            usage
+            exit 0 ;;
+        -v | --version )
+            echo "TeXrm: Version 1.0.0"
+            exit 0 ;;
+        * )
+            echo "TeXrm: Error; Bad Option." 1>&2
+            echo ""
+            echo "Use:"
+            echo "    texrm -h"
+            exit 1
+    esac
 fi
-```
-
-一応 Emacs から使えるようにしておきます．
-
-`init.el`
-```lisp
-(defun texrm ()
-  (interactive)
-  (shell-command-to-string "texrm -y"))
-(define-key global-map (kbd "C-c d") 'texrm)
 ```
