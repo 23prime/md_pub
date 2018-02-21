@@ -109,6 +109,13 @@ Options:
 EOF
 }
 
+function fsort {
+org_ifs=$IFS # デリミタを一時的に定義しなおす
+IFS=$'\n'
+files=($(echo "${files[*]}" | sort -n)) # 配列を辞書順ソート
+IFS=$org_ifs
+}
+
 # 削除を確認してから消す関数
 function askremove {
     for j in ${files[@]}; do # 対象ファイルの表示
@@ -134,11 +141,6 @@ for i in ${targets[@]}; do
     files+=(`find -maxdepth 1 -name "${i}"`) # カレントディレクトリ直下のファイルのみ対象
 done
 
-org_ifs=$IFS # デリミタを一時的に定義しなおす
-IFS=$'\n'
-files=($(echo "${files[*]}" | sort -n)) # 配列を辞書順ソート
-IFS=$org_ifs
-
 # 実行部
 if [ "${#files[@]}" -eq 0 ]; then # ファイルの有無を確認
     echo "No such files."
@@ -146,9 +148,11 @@ if [ "${#files[@]}" -eq 0 ]; then # ファイルの有無を確認
 else
     case $ARG in
         "" )
+            fsort
             askremove 
             exit 0 ;;
         -Y | -y | -yes | -Yes | -YES ) # 削除の確認をしないやつ
+            fsort
             for j in ${files[@]}; do
                 echo "${j}"
             done
@@ -162,12 +166,13 @@ else
             read EXT
             files=()
             for i in ${targets[@]}; do
-                if [ $i != *.$EXT ]; then
+                if [[ $i != *.$EXT ]]; then
                     files+=(`find -maxdepth 1 -name "${i}"`)
                 else
                     :
                 fi
             done
+            fsort
             askremove
             exit 0 ;;
         -h | --help )
