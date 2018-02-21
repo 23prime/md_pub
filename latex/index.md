@@ -8,17 +8,19 @@ LaTeX 関連のコマンドをいい感じにまとめてくれてるやつで�
 
 BiBTeX とか，何回もタイプセットしなきゃいけないのをまとめて自動的にやってくれたり，勝手に PDF を生成してくれたりします．
 
+### Usage
 ```shell
-latexmk hoge.tex`
+latexmk hoge.tex
 ```
 
-オプションについて．
+### Options
 - `-pv`  : PDF を生成して，それをビューワで開く．
 - `-pvc` : `-pv` してさらに `hoge.tex` が更新されたら勝手に再コンパイル．
 - `-c`   : 中間ファイル（`.dvi` `.pdf` 除く）の削除を行う．
 - `-C`   : 中間ファイル（`.dvi` `.pdf` 含む）の削除を行う．
 
-設定は次みたいな感じで書きます．
+
+### Settings
 
 `~./latexmkrc`
 ```perl
@@ -43,7 +45,9 @@ $pdf_previewer = "evince";
 
 LaTeX 執筆に不可欠な Emacs のモードです．
 
-設定だけ．
+色々と便利なコマンドを提供してくれたり，括弧の自動補完とかしてくれます．
+
+#### Settings
 
 `init.el`
 ```lisp
@@ -65,6 +69,13 @@ LaTeX 執筆に不可欠な Emacs のモードです．
 ```
 
 `(setq tex-command "latexmk -pvc")` で `C-c C-t j` から `latexmk -pvc` を呼べるようにしてます．
+
+#### （個人的に）よく使うコマンド
+
+- `C-c C-t j` : コンパイル（`tex-command` で，デフォルトでは `platex` してくれる）
+- `C-c C-t d` : PDF の生成（デフォルトでは `platex` + `dvipdfmx` してくれる）
+  - ↑これらは実行時に `.tex` の Save も行う．
+- `C-c C-b SPC` : `\begin{hoge}` `\end{hoge}` を作ってくれる
 
 ## TeXrm
 
