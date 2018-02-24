@@ -20,7 +20,7 @@ latexmk [<options>] hoge.tex
 ```
 
 ### Options
-- `-pv`  : PDF を生成して，それをビューワで開く．
+- `-pv`  : PDF を生成して，それをビューアで開く．
 - `-pvc` : `-pv` してさらに `hoge.tex` が更新されたら勝手に再コンパイル．
 - `-c`   : 中間ファイル（`.dvi` `.pdf` 除く）の削除を行う．
 - `-C`   : 中間ファイル（`.dvi` `.pdf` 含む）の削除を行う．
@@ -224,8 +224,11 @@ fi
 ```lisp
 (defun texrm ()
   (interactive)
+  (message "TeXrm -- Done!")
   (shell-command-to-string "texrm -y"))
-(define-key global-map (kbd "C-c d") 'texrm)
+(add-hook 'yatex-mode-hook
+          '(lambda ()
+             (define-key YaTeX-mode-map (kbd "C-c d") 'texrm)))
 ```
 
 ## <a name="sync"> SyncTeX </a>
@@ -242,9 +245,9 @@ PDF から飛ぶときは，`Ctrl + 左クリック` でいけます．
 
 #### Settings
 
-とはいえ，エディタやビューワの設定が必要です．
+とはいえ，エディタやビューアごとにスクリプトが必要です．
 
-Emacs と Evince の設定を載せます．
+Emacs と Evince をジャンプできるようにします．
 
 ##### Settings for Evince
 `path の通った場所/fwdevince`
