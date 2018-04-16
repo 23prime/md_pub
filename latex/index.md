@@ -91,6 +91,7 @@ LaTeX 執筆に不可欠な Emacs のモードです．
 - `C-c C-t d` : PDF の生成（デフォルトでは `platex` + `dvipdfmx` してくれる）
   - ↑これらは実行時に `.tex` の Save も行う．
 - `C-c C-b SPC` : `\begin{hoge}` `\end{hoge}` を作ってくれる
+- `C-c [` : `bib` から `\cite` を挿入
 
 
 ## <a name="rm"> TeXrm </a>
