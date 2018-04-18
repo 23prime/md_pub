@@ -495,6 +495,10 @@ if __name__ == '__main__':
 ```
 /usr/share/texlive/texmf-dist/tex/latex/
 ```
-あたりに置いてあげればよいです．
+あたりに置いてあげて，
+```
+sudo mktexlsr
+```
+とか打ってあげればよいです．
 
 参考：[各種パッケージの利用 - TeX Wiki](https://texwiki.texjp.org/?LaTeX%E5%85%A5%E9%96%80%2F%E5%90%84%E7%A8%AE%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E5%88%A9%E7%94%A8)
