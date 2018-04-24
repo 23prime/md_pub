@@ -6,4 +6,6 @@ Note for Rust.
 
 [配列](./vec)
 
+[Aattributes](./attr)
+
 [Compared with Haskell](./has)
