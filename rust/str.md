@@ -108,3 +108,21 @@ let r = s.replace("world", "hello");
 assert_eq!(s, "hello, world!");
 assert_eq!(r, "hello, hello!");
 ```
+
+### 型キャスト
+
+- `parse`: `&str` を別の型へとキャストする．
+
+```rust
+let s: i64 = "123".parse().unwrap();
+assert_eq!(s, 123);
+```
+
+### その他
+
+- `trim`: 先頭と末尾の空白を削除する．
+
+```rust
+let s = "hello world\n".trim();
+assert_eq!(s, "hello world");
+```
