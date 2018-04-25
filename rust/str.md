@@ -105,7 +105,7 @@ assert_eq!(cap, 24);
 ```rust
 let s = "hello, world!";
 let r = s.replace("world", "hello");
-assert_eq!(s, "hello, world!");
+assert_eq!(s, "hello,      world!");
 assert_eq!(r, "hello, hello!");
 ```
 

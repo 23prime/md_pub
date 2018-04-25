@@ -62,7 +62,7 @@ fn read_vec2<T: std::str::FromStr>(n: u32) -> Vec<Vec<T>> {
 
 ### ファイルの読み書き
 
-参考：[`open` | Rust by Example](http://rust-lang-ja.org/rust-by-example/std_misc/file/open.html)
+参考：[`open` - Rust by Example](http://rust-lang-ja.org/rust-by-example/std_misc/file/open.html)
 
 `File::open` が使える．
 
