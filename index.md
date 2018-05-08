@@ -6,11 +6,14 @@
 ### [Instagram](https://www.instagram.com/23_prime/)
 
 ## Notes
-### [Polly](./polly/)
-Slack Bot for Voting.
+### [Haskell](./haskell/)
+Note for Haskell.
 
 ### [Rust](./rust/)
-Rust compared with Haskell.
+Note for Rust.
 
 ### [LaTeX](./latex/)
 About tools of LaTeX.
+
+### [Polly](./polly/)
+Slack Bot for Voting.
