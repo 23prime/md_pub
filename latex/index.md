@@ -98,7 +98,7 @@ LaTeX 執筆に不可欠な Emacs のモードです．
 
 LaTeX の中間ファイルたちをまとめて片付けるために書いたスクリプトです．
 
-ちゃんと誰かが作ってる `latexmk -c` の方がいいかも．
+※普通に考えたらちゃんとした人が作ってる `latexmk -c` の方がいい．
 
 `texrm`
 ```shell
@@ -106,7 +106,7 @@ LaTeX の中間ファイルたちをまとめて片付けるために書いた�
 
 ARG=$1
 
-# 削除対象ファイルの指定
+# Extensions of target files.
 targets=(
     *.dvi
     *.aux
@@ -123,13 +123,14 @@ targets=(
     *.gz
 )
 
-# help で呼び出すやつ
+# Help.
 function usage {
     cat <<EOF
 Usage:
     texrm [<options>]
 
 Options:
+    -a, --all    : Remove all files under home directory.
     -y, --yes    : Not ask whether to remove.
     -e, --except : Exclude some files by extension.
     -v, --version: TeXrm version.
@@ -138,18 +139,18 @@ EOF
 }
 
 function fsort {
-org_ifs=$IFS # デリミタを一時的に定義しなおす
+org_ifs=$IFS # Define the delimiter temporarily.
 IFS=$'\n'
-files=($(echo "${files[*]}" | sort -n)) # 配列を辞書順ソート
+files=($(echo "${files[*]}" | sort -n)) # Sort array of files for lex-order.
 IFS=$org_ifs
 }
 
-# 削除を確認してから消す関数
+# Function to ask remove or not.
 function askremove {
-    for j in ${files[@]}; do # 対象ファイルの表示
+    for j in ${files[@]}; do # Indicate target files.
         echo "${j}"
     done
-    echo "Remove these files? [Y/n]" # 削除実行の確認
+    echo "Remove these files? [Y/n]"
     read ANS
     case $ANS in
         "" | Y | y | yes | Yes | YES )
@@ -163,60 +164,71 @@ function askremove {
     exit 0
 }
 
-# 対象ファイルを探して配列化
+# Make array of target files.
 files=()
+
+
 for i in ${targets[@]}; do
-    files+=(`find -maxdepth 1 -name "${i}"`) # カレントディレクトリ直下のファイルのみ対象
+    case $ARG in
+        -a | --all )
+            files+=(`find ./ -name "${i}"`) ;; # All files under current directory.
+        * )
+            files+=(`find -maxdepth 1 -name "${i}"`) ;; # Only current directory.
+    esac
 done
 
-# 実行部
-if [ "${#files[@]}" -eq 0 ]; then # ファイルの有無を確認
-    echo "No such files."
-    exit 0
-else
-    case $ARG in
-        "" )
-            fsort
-            askremove 
-            exit 0 ;;
-        -Y | -y | -yes | -Yes | -YES ) # 削除の確認をしないやつ
-            fsort
-            for j in ${files[@]}; do
-                echo "${j}"
-            done
-            for i in ${files[@]}; do
-                rm -rf "${i}"
-            done
-            echo "These files have been Removed!"
-            exit 0 ;;
-        -e | --except ) # 削除しない拡張子を指定できる
-            echo "Please enter the extension to exclude."
-            read EXT
-            files=()
-            for i in ${targets[@]}; do
-                if [[ $i != *.$EXT ]]; then
-                    files+=(`find -maxdepth 1 -name "${i}"`)
-                else
-                    :
-                fi
-            done
-            fsort
-            askremove
-            exit 0 ;;
-        -h | --help )
-            usage
-            exit 0 ;;
-        -v | --version )
-            echo "TeXrm: Version 1.0.0"
-            exit 0 ;;
-        * )
-            echo "TeXrm: Error; Bad Option." 1>&2
-            echo ""
-            echo "Use:"
-            echo "    texrm -h"
-            exit 1
-    esac
-fi
+# Execute.
+case $ARG in
+    -h | --help )
+        usage
+        exit 0 ;;
+    -v | --version )
+        echo "TeXrm: Version 1.0.0"
+        exit 0 ;;
+    * )
+        if [ "${#files[@]}" -eq 0 ]; # Check; files exist or not.
+        then
+            echo "No such files."
+            exit 0
+        else
+            case $ARG in
+                "" | -a | --all )
+                    fsort
+                    askremove 
+                    exit 0 ;;
+                -Y | -y | -yes | -Yes | -YES ) # Not ask to remove or not
+                    fsort
+                    for j in ${files[@]}; do
+                        echo "${j}"
+                    done
+                    for i in ${files[@]}; do
+                        rm -rf "${i}"
+                    done
+                    echo "These files have been Removed!"
+                    exit 0 ;;
+                -e | --except ) # Specify extension don't remove.
+                    echo "Please enter the extension to exclude."
+                    read EXT
+                    files=()
+                    for i in ${targets[@]}; do
+                        if [[ $i != *.$EXT ]]; then
+                            files+=(`find -maxdepth 1 -name "${i}"`)
+                        else
+                            :
+                        fi
+                    done
+                    fsort
+                    askremove
+                    exit 0 ;;
+                * )
+                    echo "TeXrm: Error; Bad Option." 1>&2
+                    echo ""
+                    echo "Use:"
+                    echo "    texrm -h"
+                    exit 1
+            esac
+        fi
+esac
 ```
 
 一応 Emacs から使えるようにしておきます．
