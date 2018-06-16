@@ -244,6 +244,7 @@ esac
              (define-key YaTeX-mode-map (kbd "C-c d") 'texrm)))
 ```
 
+
 ## <a name="sync"> SyncTeX </a>
 
 TeX のソースファイルと PDF を相互にジャンプできるようにするやつです．
