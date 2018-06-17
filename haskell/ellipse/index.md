@@ -4,9 +4,10 @@
 
 ```haskell
 {-# LANGUAGE DataKinds           #-}
-{-# LANGUAGE DatatypeContexts    #-}
+{-# LANGUAGE GADTs               #-}
 {-# LANGUAGE KindSignatures      #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators       #-}
 
 module Ellipse where
 
@@ -15,39 +16,17 @@ import           GHC.TypeLits
 
 import           Field
 
--------------
--- Samples --
--------------
--- y^2 = x^3 + x + 1 in F_5
-p0 = E (0, 1) :: Ellipse (F 5) (Fr 1 1)
-p1 = E (0, 4) :: Ellipse (F 5) (Fr 1 1)
-p2 = E (2, 1) :: Ellipse (F 5) (Fr 1 1)
-p3 = E (2, 4) :: Ellipse (F 5) (Fr 1 1)
-p4 = E (3, 1) :: Ellipse (F 5) (Fr 1 1)
-p5 = E (3, 4) :: Ellipse (F 5) (Fr 1 1)
-p6 = E (4, 2) :: Ellipse (F 5) (Fr 1 1)
-p7 = E (4, 3) :: Ellipse (F 5) (Fr 1 1)
-ps = [Infty, p0, p1, p2, p3, p4, p5, p6, p7]
-
--- y^2 = x^3 + 4 x in Q
-q0 = E (0, 0)  :: Ellipse Rational (Fr 4 1)
-q1 = E (-2, 0) :: Ellipse Rational (Fr 4 1)
-q2 = E (2, 0)  :: Ellipse Rational (Fr 4 1)
-qs = [Infty, q0, q1, q2]
-
 -----------------
 -- Define Frac --
 -----------------
-data Frac = Fr Nat Nat
+data Frac = Nat :/: Nat
 
-data SFrac (n :: Frac) = SFrac
-  {-#UNPACK#-}!Int
-  {-#UNPACK#-}!Int
+data SFrac (n :: Frac) = SFrac {-# UNPACK #-} !Int {-# UNPACK #-} !Int
 
 class KnownFrac (n :: Frac) where
   fracSing :: SFrac n
 
-instance (KnownNat a, KnownNat b) => KnownFrac (Fr a b) where
+instance (KnownNat a, KnownNat b) => KnownFrac (a :/: b) where
   fracSing = SFrac
     (fromIntegral $ natVal (Proxy::Proxy a))
     (fromIntegral $ natVal (Proxy::Proxy b))
@@ -56,32 +35,71 @@ fracVal :: forall f n proxy. (KnownFrac n, Fractional f) => proxy n -> f
 fracVal _ = case fracSing :: SFrac n of
               SFrac a b -> fromIntegral a / fromIntegral b
 
-
 --------------------
 -- Define Ellipse --
 --------------------
-data Ellipse a (p :: Frac) = E (a, a) | Infty deriving (Eq, Ord)
+data Ellipse :: * -> Frac -> * where
+  E     :: Fractional a => (a, a) -> Ellipse a p
+  Infty :: Fractional a => Ellipse a p
+
+instance Eq a => Eq (Ellipse a p) where
+  E p1  == E p2  = p1 == p2
+  E _   == Infty = False
+  Infty == E _   = False
+  Infty == Infty = True
+
+instance Ord a => Ord (Ellipse a p) where
+  E p1  `compare` E p2 = p1 `compare` p2
+  Infty `compare` E _ = LT
+  E _   `compare` Infty = GT
+  Infty `compare` Infty = EQ
+
+  E p1  < E p2  = p1 < p2
+  Infty < E _   = True
+  _     < Infty = False
+
+  E p1  <= E p2  = p1 <= p2
+  Infty <= _     = True
+  E _   <= Infty = False
+
+  E p1  > E p2  = p1 > p2
+  Infty > _     = False
+  E _   > Infty = True
+
+  E p1  >= E p2  = p1 >= p2
+  Infty >= E _   = False
+  _     >= Infty = True
+
+  max (E p1) (E p2) = E $ max p1 p2
+  max Infty e       = e
+  max e Infty       = e
+
+  min (E p1) (E p2) = E $ min p1 p2
+  min Infty e       = Infty
+  min e Infty       = Infty
 
 instance (KnownFrac p, Fractional a, Show a) => Show (Ellipse a p) where
   show (E (x, y)) = show (x, y)
   show Infty      = "Intfy"
 
-instance (KnownFrac p, Eq a, Fractional a) => Num (Ellipse a p) where
+instance (KnownFrac p, Fractional a, Eq a) => Num (Ellipse a p) where
   (+)                     = addEllipse
   E (x1, y1) - E (x2, y2) = E (x1, y1) + (- E (x2, y2))
-  (*)                     = undefined
-  negate (E (x, y))       = E (x, - y) -- only (F p)
-  abs                     = id
-  signum                  = undefined
-  fromInteger             = undefined
+
+  negate (E (x, y)) = E (x, - y) -- only (F p)
+  negate Infty      = Infty
+
+  abs         = id
+  (*)         = undefined
+  signum      = undefined
+  fromInteger = undefined
 
 
 ---------------------------
 -- Functions for Ellipse --
 ---------------------------
-
 -- Make a in "y^2 = x^3 + a x + b"
-mkCoeff :: (KnownFrac p, Eq a, Fractional a) => Ellipse a p -> a
+mkCoeff :: (KnownFrac p, Fractional a) => Ellipse a p -> a
 mkCoeff = fracVal
 
 -- Addition of Ellipse
@@ -106,7 +124,7 @@ scalarMul n = foldl (+) Infty . replicate n
 -- Generate [Point] with Addition from a Point in Ellipse
 generateEs :: (KnownFrac p, Eq a, Fractional a) => Ellipse a p -> [Ellipse a p]
 generateEs Infty = [Infty]
-generateEs e     = make e e []
+generateEs e     = make e e [Infty]
   where
     make e0 e es
       | e `elem` es = es
@@ -115,4 +133,33 @@ generateEs e     = make e e []
 -- Like fmap
 emap :: (Fractional a, Fractional b) => (a -> b) -> Ellipse a p -> Ellipse b p
 emap f (E (x, y)) = E (f x, f y)
+
+-------------
+-- Samples --
+-------------
+-- y^2 = x^3 + x + 1 in F_5
+s0 = E (0, 1) :: Ellipse (F 5) (1 :/: 1)
+s1 = E (4, 2) :: Ellipse (F 5) (1 :/: 1)
+s2 = E (2, 1) :: Ellipse (F 5) (1 :/: 1)
+s3 = E (3, 4) :: Ellipse (F 5) (1 :/: 1)
+s4 = E (3, 1) :: Ellipse (F 5) (1 :/: 1)
+s5 = E (2, 4) :: Ellipse (F 5) (1 :/: 1)
+s6 = E (4, 3) :: Ellipse (F 5) (1 :/: 1)
+s7 = E (0, 4) :: Ellipse (F 5) (1 :/: 1)
+ss = [Infty, s0, s1, s2, s3, s4, s5, s6, s7]
+
+-- >s0 + s1
+-- (2, 1)
+-- >it == s2
+-- True
+-- >generateEs s0
+-- [Intfy,(0,1),(4,2),(2,1),(3,4),(3,1),(2,4),(4,3),(0,4)]
+-- >it == ss
+-- True
+
+-- y^2 = x^3 + 4 x in Q
+t0 = E (0, 0)  :: Ellipse Rational (4 :/: 1)
+t1 = E (-2, 0) :: Ellipse Rational (4 :/: 1)
+t2 = E (2, 0)  :: Ellipse Rational (4 :/: 1)
+ts = [Infty, t0, t1, t2]
 ```
