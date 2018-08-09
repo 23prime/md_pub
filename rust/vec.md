@@ -126,3 +126,14 @@ let (l, r) = v.split_at(3);
 assert_eq!(l, [0, 1, 2]);
 assert_eq!(r, [3, 4]);
 ```
+
+### 配列に `map` する
+
+- 直接はできないので `iter` を経由して `map` する．
+
+```rust
+let mut v = vec![0, 1, 2, 3, 4];
+
+let v = v.iter().map(|&x| x * 2).collect::<Vec<i64>>();
+assert_eq!(v, [0, 2, 4, 6, 8]);
+```
