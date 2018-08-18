@@ -15,6 +15,25 @@ fn hoge(...) {...}
 
 を先頭に書けば，すべての関数に対して unused を無視する．
 
-他に，`unused_imports` `unused_variables` 等を無視したい時に使える．
+他に，
 
-※ allow の逆は warn
+- `unused_imports`
+- `unused_variables`
+- `unused_assignments`
+
+等が使える．
+
+※ `#[allow]` の逆は`#[warn]`
+
+
+### test
+
+`assert_eq!` 等を用いて，簡単なテストを行う．
+
+```rust
+#[test]
+fn test_func() {
+  let a = 0;
+  assert_eq!(a, 0);
+}
+```
