@@ -3,10 +3,12 @@
 ### 文字列型
 
 2つの文字列型がある．
+
 - `&str` : 固定長．文字列スライスっていうらしい．
 - `String` : 可変長．`to_string()` によって `&str` から変換できる．逆に，`&` によって `&str` に変換できる．
 
 ### index によるアクセス
+
 ```rust
 let s = "hello";
 
@@ -19,6 +21,7 @@ assert_eq!(cs[0], 'h');
 ```
 
 日本語だと次のような感じ．
+
 ```rust
 let mut s = "ハロー！";
 
@@ -31,11 +34,13 @@ assert_eq!(cs[0], 'ハ');
 ```
 
 ### 文字列の連結
+
 - `push(&mut self, ch: char)`: `Char` を後方に連結．
 - `push_str(&mut self, string: &str)`: `&str` を後方に連結．
 - `+`: `push_str` とほぼ同じ．
 - `concat()`: `Vec<&str>` の要素を連結する．
 - `connect(s: &str)`: `Vec<&str>` の要素に `s` を挟んで連結する．  
+
 が使える．
 
 ```rust
@@ -58,6 +63,7 @@ assert_eq!(s, "hello, world!");
 ```
 
 ### 文字列の分割
+
 - `split`: `Char` で分割．
 - `split_str`: `&str` で分割．
 
@@ -66,7 +72,6 @@ let mut s = "a b c d e";
 let ss: Vec<&str> = s.split(' ').collect();
 assert_eq!(ss, vec!["a", "b", "c", "d", "e"]);
 ```
-
 
 ### 文字列の長さ（つまり文字数）とキャパシティ
 
@@ -96,7 +101,7 @@ let mut len = h.len();
 let mut cap = h.capacity();
 assert_eq!(len, 13);
 assert_eq!(cap, 24);
-``` 
+```
 
 ### 文字列の置換
 
