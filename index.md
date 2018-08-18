@@ -1,6 +1,7 @@
 # Hello!
 
 ## Links
+### [Mastodon](https://mstdn.jp/@23_prime)
 ### [Twitter](https://twitter.com/23_prime)
 ### [Blog](http://23prime.hatenablog.com/)
 ### [Instagram](https://www.instagram.com/23_prime/)
