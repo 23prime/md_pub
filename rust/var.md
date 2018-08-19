@@ -1,4 +1,38 @@
-## 変数
+## グローバル変数
+
+`static` で宣言できる．
+
+```rust
+static ZERO: i32 = 0;
+
+#[test]
+fn test_func() {
+  assert_eq!(ZERO, 0);
+}
+```
+
+mutable にもできるが， `unsafe` 内でしか使えない．
+
+```rust
+static mut ZERO: i32 = 0;
+
+#[test]
+fn test_func3() {
+  unsafe {
+    ZERO += 1;
+    assert_eq!(ZERO, 1);
+  }
+}
+
+#[test]
+fn test_func4() {
+  unsafe {
+    assert_eq!(ZERO, 1);
+  }
+}
+```
+
+## ローカル変数
 
 ### 変数宣言
 
