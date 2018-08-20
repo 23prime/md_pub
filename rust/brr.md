@@ -83,3 +83,45 @@ c = &b;            // 参照 c へ参照を再代入
 assert_eq!(1, *c);
 assert_eq!(0, a); // 「借用しなおす」ため， a の値は変更されない
 ```
+
+### ライフタイム (lifetime)
+
+- ライフタイム：参照を（安全に）利用できる範囲
+
+次のコードでは， `assert_eq!(*a, 1)` の段階で既に `b` がスコープから外れ， `a` の参照が `null` になってしまう．  
+これを放っておくとダングリングポインタが生じるため，コンパイラに怒られる．
+
+```rust
+let mut a: &i32 = &0;
+{
+  let b = 0;
+  a = &b;
+}
+assert_eq!(*a, 0);
+```
+
+↓ 実行結果．
+
+```shell
+error[E0597]: `b` does not live long enough
+  --> src/main.rs:10:10
+   |
+10 |     a = &b;
+   |          ^ borrowed value does not live long enough
+11 |   }
+   |   - `b` dropped here while still borrowed
+12 |   assert_eq!(*a, 0);
+13 | }
+   | - borrowed value needs to live until here
+```
+
+ただし，次のコードは通る．
+
+```rust
+let mut a: &i32 = &0;
+{
+  let b = 0;
+  let a = &b;
+}
+assert_eq!(*a, 0);
+```
