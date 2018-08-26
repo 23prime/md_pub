@@ -24,9 +24,9 @@ Haskell の型システムに似てる部分も多いので，実装例で比べ
     ```haskell
     -- Haskell
     data Circle = Circle { x :: Double
-                        , y :: Double
-                        , r :: Double
-                        }
+                         , y :: Double
+                         , r :: Double
+                         }
     ```
 
   - 四元数
@@ -187,10 +187,10 @@ struct Circle {
 Haskell
 
 ```haskell
-data Circle = C { x :: Double
-                , y :: Double
-                , r :: Double
-                }
+data Circle = Circle { x :: Double
+                     , y :: Double
+                     , r :: Double
+                     }
   deriving (Eq)
 ```
 
