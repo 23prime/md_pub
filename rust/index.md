@@ -8,12 +8,12 @@ Note for Rust.
 
 [参照と借用](./brr)
 
+[型システム](./type)
+
 [文字列](./str)
 
 [配列](./vec)
 
-[IO](./io)
+[入出力](./io)
 
-[Aattributes](./attr)
-
-[Compared with Haskell](./has)
+[属性](./attr)

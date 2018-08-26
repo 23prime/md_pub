@@ -1,4 +1,6 @@
-## Compared with Haskell.
+## 型システム
+
+Compared with Haskell.
 
 ### Struct
 
@@ -37,7 +39,7 @@
   data Quat = Quat (Float, Float, Float, Float)
   ```
 
-  - 曜日
+- 曜日
 
   Rust
 
@@ -53,9 +55,11 @@
   data Day = Sun | Mon | Tue | Wed | Thu | Fri | Sat
   ```
 
-ジェネリックな型も定義できる．
+制約付きのジェネリックな型も定義できる．
 
 ```rust
+use num::traits::Num;
+
 enum Hoge<T: Num> {
   Fuga(T)
 }
@@ -69,7 +73,7 @@ enum Hoge<T: Num> {
 data Num a => Hoge a = Fuga a
 ```
 
-しかし， `DatatypeContexts` は非推奨な古い機能を提供する拡張なので，今は `GADTs` で書くのが良さそう．
+ちなみに， `DatatypeContexts` は非推奨な古い機能を提供する拡張なので，今は `GADTs` で書くのが良さそう．
 
 ```haskell
 {-# LANGUAGE GADTs          #-}
