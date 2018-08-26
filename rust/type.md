@@ -1,91 +1,115 @@
 ## 型システム
 
-Compared with Haskell.
+Haskell の型システムに似てる部分も多いので，実装例で比べてみる．
 
-### Struct
+### データ型の定義
 
-- 円を表す型（構造体）
+- `struct`
 
-  Rust
+  直積型を書ける．
+
+  Haskell では `data` とか `newtype` に相当する．
+
+  - 円を表す型（構造体）
+
+    ```rust
+    // Rust
+    struct Circle {
+        x: f64,
+        y: f64,
+        r: f64,
+    }
+    ```
+
+    ```haskell
+    -- Haskell
+    data Circle = Circle { x :: Double
+                        , y :: Double
+                        , r :: Double
+                        }
+    ```
+
+  - 四元数
+
+    ```rust
+    // Rust
+    struct Quat(f64, f64, f64, f64);
+    ```
+
+    ```haskell
+    -- Haskell
+    data Quat = Quat (Float, Float, Float, Float)
+    ```
+
+- `enum`
+
+  直和型を書ける．
+
+  これも `data` とか `newtype` に相当する．
+
+  - 曜日
+
+    ```rust
+    // Rust
+    enum Day {
+      Sun, Mon, Tue, Wed, Thu, Fri, Sat
+    }
+    ```
+
+    ```haskell
+    -- Haskell
+    data Day = Sun | Mon | Tue | Wed | Thu | Fri | Sat
+    ```
+
+- `type`
+
+  Haskell の `type` に相当する．
 
   ```rust
-  struct Circle {
-      x: f64,
-      y: f64,
-      r: f64,
-  }
+  // Rust
+  type Mat = Vec<Vec<i64>>;
   ```
-
-  Haskell
 
   ```haskell
-  data Circle = C { x :: Double
-                  , y :: Double
-                  , r :: Double
-                  }
+  -- Haskell
+  type Mat = [[Int]]
   ```
 
-- 四元数
+- その他
 
-  Rust
+  制約付きの多相型も定義できる．
+
+  上の `Mat` 型を，より一般的な数値型を受け取れるようにしてみる．
 
   ```rust
-  struct Quat(f64, f64, f64, f64);
+  // Rust
+  use num::traits::Num;
+
+  type Mat<T: num::traits::Num + std::fmt::Display + Copy> = Vec<Vec<T>>;
   ```
 
-  Haskell
+  これを Haskell で書こうとすると，次のようになる．
 
   ```haskell
-  data Quat = Quat (Float, Float, Float, Float)
+  -- Haskell
+  {-# LANGUAGE DatatypeContexts #-}
+
+  newtype Num a => Mat a = Mat [[a]]
   ```
 
-- 曜日
-
-  Rust
-
-  ```rust
-  enum Day {
-     Sun, Mon, Tue, Wed, Thu, Fri, Sat
-  }
-  ```
-
-  Haskell
+  ちなみに `DatatypeContexts` は非推奨な古い機能を提供する拡張なので，今は `GADTs` で書くのが良さそう．
 
   ```haskell
-  data Day = Sun | Mon | Tue | Wed | Thu | Fri | Sat
+  -- Haskell
+  {-# LANGUAGE GADTs #-}
+
+  data Mat a where
+    Mat :: Num a => a -> Mat a
   ```
-
-制約付きのジェネリックな型も定義できる．
-
-```rust
-use num::traits::Num;
-
-enum Hoge<T: Num> {
-  Fuga(T)
-}
-```
-
-これをそのまま Haskell で書くと，次のようになる．
-
-```haskell
-{-# LANGUAGE DatatypeContexts #-}
-
-data Num a => Hoge a = Fuga a
-```
-
-ちなみに， `DatatypeContexts` は非推奨な古い機能を提供する拡張なので，今は `GADTs` で書くのが良さそう．
-
-```haskell
-{-# LANGUAGE GADTs          #-}
-{-# LANGUAGE KindSignatures #-}
-
-data Hoge :: * -> * where
-  Fuga :: Num a => a -> Hoge a
-```
 
 ### Trait
 
-Haskell の type class に相当する．
+Haskell の型クラスに相当する．
 
 Rust
 
@@ -179,4 +203,4 @@ Rust には `Eq` と `PartialEq` の2つの Trait が存在する．
 
 例えば Floating Point Number な型は `PartialEq` である．
 
-`Circle` 型ではフィールドとして `f64` （64bit IEEE 浮動小数点数）を持たせているので，多分 `Eq` だとダメ．
+`Circle` 型ではフィールドとして `f64` （64bit IEEE 浮動小数点数）を持たせているので， `Eq` だとダメ．
