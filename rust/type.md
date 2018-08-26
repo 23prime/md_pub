@@ -52,7 +52,7 @@ Haskell の型システムに似てる部分も多いので，実装例で比べ
     ```rust
     // Rust
     enum Day {
-      Sun, Mon, Tue, Wed, Thu, Fri, Sat
+        Sun, Mon, Tue, Wed, Thu, Fri, Sat
     }
     ```
 
@@ -85,7 +85,7 @@ Haskell の型システムに似てる部分も多いので，実装例で比べ
   // Rust
   use num::traits::Num;
 
-  type Mat<T: num::traits::Num + std::fmt::Display + Copy> = Vec<Vec<T>>;
+  type Mat<T: Num> = Vec<Vec<T>>;
   ```
 
   これを Haskell で書こうとすると，次のようになる．
@@ -94,7 +94,7 @@ Haskell の型システムに似てる部分も多いので，実装例で比べ
   -- Haskell
   {-# LANGUAGE DatatypeContexts #-}
 
-  newtype Num a => Mat a = Mat [[a]]
+  newtype Num t => Mat t = Mat [[t]]
   ```
 
   ちなみに `DatatypeContexts` は非推奨な古い機能を提供する拡張なので，今は `GADTs` で書くのが良さそう．
@@ -103,8 +103,8 @@ Haskell の型システムに似てる部分も多いので，実装例で比べ
   -- Haskell
   {-# LANGUAGE GADTs #-}
 
-  data Mat a where
-    Mat :: Num a => a -> Mat a
+  data Mat t where
+    Mat :: Num t => [[t]] -> Mat t
   ```
 
 ### Trait
