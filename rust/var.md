@@ -2,19 +2,20 @@
 
 ### グローバル変数
 
-`static` で宣言できる．
+`static` か `const` で宣言できる．
 
 ```rust
 static ZERO: i32 = 0;
+// const ZERO: i32 = 0; でもいい
 
 #[test]
 fn test_func() {
-  assert_eq!(ZERO, 0);
+    assert_eq!(ZERO, 0);
 }
 ```
 
-- `static` 宣言では，大文字を使う文化（コンパイラからの警告は `non_upper_case_globals` で無視できる）
-- mutable にもできるが， `unsafe` 内でしか使えない．
+- `static` `const` 宣言では，大文字を使う文化（コンパイラからの警告は `non_upper_case_globals` で無視できる）
+- `static` は mutable にもできるが， `unsafe` 内でしか使えない．
 
   ```rust
   static mut ZERO: i32 = 0;
@@ -54,17 +55,7 @@ fn test_func() {
   assert_eq!(a, 1);
   ```
 
-- constant
-
-  ```rust
-  const A: i32 = 0;
-  assert_eq!(A, 0);
-  ```
-
-  - `const` 宣言でも，大文字が推奨される．
-  - `const mut ...` はできない．
-
-- 局所的に `static` を使うこともできるが，グローバルスコープなわけではない．
+- 局所的に `static` や `const` を使うこともできるが，当然グローバルなスコープにはならない．
 
   ```rust
   fn test_func() {
@@ -73,7 +64,7 @@ fn test_func() {
   }
 
   fn test_func2() {
-      assert_eq!(A, 0);
+      assert_eq!(A, 0); // => cannot find value `A` in this scope
   }
   ```
 
@@ -113,14 +104,14 @@ assert_eq!(a, 1);
 
 ```rust
 static A: i32 = 0;
-unsafe{
+{
     static A: i64 = 1;
     assert_eq!(A, 1);
 }
 assert_eq!(A, 0);
 ```
 
-### 再代入
+### 再代入（変更）
 
 - constant や immutable な変数ではできない．
 
