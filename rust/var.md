@@ -1,5 +1,13 @@
 ## 変数
 
+### 変数宣言の種類
+
+|         | `static` | `static mut` | `const` | `let` | `let mut` |
+|---------|----------|--------------|---------|-------|-----------|
+| global  |    ○    |      ○      |   ○    |  ×   |    ×     |
+| mutable |    ×    |      ×      |   ○    |  ×   |    ○     |
+|shadowing|    ○    |      ○      |   ×    |  ○   |    ×     |
+
 ### グローバル変数
 
 `static` か `const` で宣言できる．
@@ -91,7 +99,7 @@ let a: i32 = 0;
 ### 再宣言（シャドーイング）
 
 - immutable な変数でもできる．
-- constant ではできない．
+- `const` ではできない．
 - 型が違ってもいい．
 
 ```rust
@@ -113,7 +121,7 @@ assert_eq!(A, 0);
 
 ### 再代入（変更）
 
-- constant や immutable な変数ではできない．
+- `const` や immutable な変数ではできない．
 
 ```rust
 let mut a = 0;
