@@ -15,6 +15,3 @@ Note for Rust.
 
 ### [LaTeX](./latex/)
 About tools of LaTeX.
-
-### [Polly](./polly/)
-Slack Bot for Voting.
