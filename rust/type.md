@@ -21,6 +21,20 @@ Haskell の型システムに似てる部分も多いので，実装例で比べ
     }
     ```
 
+    値を取り出すには，
+
+    ```rust
+    let c = Circle {
+        x: 1,
+        y: 2,
+        r: 3
+    }
+    
+    c.x;
+    ```
+
+    などのようにする．
+
     ```haskell
     -- Haskell
     data Circle = Circle { x :: Double
