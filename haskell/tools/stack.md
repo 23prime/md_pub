@@ -6,7 +6,7 @@ Stack では，従来 Haskell での開発の際にあった（らしい）パ�
 
 ## Installing
 
-Unix 系 OS であれば次のどちらかを打ちます．
+Unix 系 OS であれば次のどちらかを打てばよい．
 
 ```
 $ curl -sSL https://get.haskellstack.org/ | sh
@@ -67,25 +67,37 @@ $ stack new <PROJECT NAME>
   $ stack ghci
   ```
 
+- テストの実行
+
+  ```
+  $ stack test
+  ```
+
 - Stack の更新
 
   ```
   $ stack upgrade
   ```
 
+- [Haddock](https://www.haskell.org/haddock/) ドキュメント（Hackage 形式のドキュメント）の作成
+
+  ```
+  $ stack haddock --haddock-arguments --odir=haddock
+  ```
+
+  この上で，`./haddock/index.html` を Web ブラウザ等で開くと閲覧できる．
 
 ## <a name="settings">設定ファイルの書き方とか</a>
 
-設定ファイルは
+設定ファイルは（基本的には）
 
 - `hoge.cabal`
 - `stack.yaml`
 
-から成ります．
+から成る．
 
 最近のバージョンではデフォルトで [hpack](http://hackage.haskell.org/package/hpack) に対応しているため， cabal ファイルを直接編集する必要はあまりない．
 代わりに `package.yaml` を編集する．
-
 
 ### グローバルな設定
 
@@ -135,3 +147,8 @@ $ stack new <PROJECT NAME>
   ```
 
   その上で，やはり `package.yaml` の `dependencies` にも書き加える．
+
+### 実行・テストの記述
+
+それぞれ `package.yaml` の `executables:`・`test:` 以下に記述する．
+雛形をいい感じに変更すれば使えるので詳細は省く．
