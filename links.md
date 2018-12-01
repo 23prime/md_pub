@@ -19,3 +19,5 @@ Mastodon への移行は失敗しました．
 ### [Instagram](https://www.instagram.com/23_prime/)
 
 ラーメン画像置き場になってしまった．
+
+### [home](./)
