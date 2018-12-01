@@ -1,5 +1,5 @@
 # Hello!
 
-- [プロフィールとか](./profile/)
+- [プロフィールとか](./profile)
 - [作ったものとか](./apps/)
-- [Links](/links/)
+- [Links](./links)
