@@ -1,5 +1,5 @@
 # Hello!
 
-### [Prolies](./profile)
-### [Making](./apps/)
+### [Profiles](./profile)
+### [Products](./apps/)
 ### [Links](./links)
